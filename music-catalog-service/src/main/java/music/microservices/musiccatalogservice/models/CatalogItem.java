@@ -1,4 +1,4 @@
-package music.microservices.musiccatalogservice;
+package music.microservices.musiccatalogservice.models;
 
 public class CatalogItem {
     private String name;
