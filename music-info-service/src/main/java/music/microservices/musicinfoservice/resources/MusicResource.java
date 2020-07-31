@@ -11,7 +11,7 @@ public class MusicResource {
 
     @RequestMapping("/{musicId}")
     public Music getMusicInfo(@PathVariable("musicId") String musicId) {
-        return new Music(musicId, "Test name");
+        return new Music(musicId, "Test name2");
 
     }
 }

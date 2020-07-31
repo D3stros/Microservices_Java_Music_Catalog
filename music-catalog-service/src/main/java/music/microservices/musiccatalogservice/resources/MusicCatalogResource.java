@@ -26,10 +26,10 @@ public class MusicCatalogResource {
     public List<CatalogItem> getCatalog(@PathVariable("userId") String userId) {
 
         //Hardcoding the ratings temporarily
-        UserRating ratings = restTemplate.getForObject("http://localhost:8083/ratingsdata/users/" + userId, UserRating.class);
+        UserRating ratings = restTemplate.getForObject("http://ratings-data-service/ratingsdata/users/" + userId, UserRating.class);
 
         return ratings.getUserRating().stream().map(rating -> {
-            Music music = restTemplate.getForObject("http://localhost:8082/music/" + rating.getMusicId(), Music.class);
+            Music music = restTemplate.getForObject("http://music-info-service/music/" + rating.getMusicId(), Music.class);
             return new CatalogItem(music.getName(), "Pop", rating.getRating());
         }).collect(Collectors.toList());
     }
