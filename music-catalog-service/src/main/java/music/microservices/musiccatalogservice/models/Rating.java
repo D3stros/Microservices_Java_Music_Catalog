@@ -5,6 +5,10 @@ public class Rating {
     private String musicId;
     private int rating;
 
+    public Rating() {
+
+    }
+
     public Rating(String musicId, int rating) {
         this.musicId = musicId;
         this.rating = rating;
