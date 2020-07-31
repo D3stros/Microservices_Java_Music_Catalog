@@ -30,7 +30,7 @@ public class MusicCatalogResource {
 
         return ratings.getUserRating().stream().map(rating -> {
             Music music = restTemplate.getForObject("http://music-info-service/music/" + rating.getMusicId(), Music.class);
-            return new CatalogItem(music.getName(), "Pop", rating.getRating());
+            return new CatalogItem(music.getName(), music.getRelease(), rating.getRating());
         }).collect(Collectors.toList());
     }
 }

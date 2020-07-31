@@ -2,12 +2,12 @@ package music.microservices.musiccatalogservice.models;
 
 public class CatalogItem {
     private String name;
-    private String genre;
+    private String release_date;
     private int rating;
 
-    public CatalogItem(String name, String genre, int rating) {
+    public CatalogItem(String name, String release_date, int rating) {
         this.name = name;
-        this.genre = genre;
+        this.release_date = release_date;
         this.rating = rating;
     }
 
@@ -19,12 +19,12 @@ public class CatalogItem {
         this.name = name;
     }
 
-    public String getGenre() {
-        return genre;
+    public String getRelease_date() {
+        return release_date;
     }
 
-    public void setGenre(String genre) {
-        this.genre = genre;
+    public void setRelease_date(String release_date) {
+        this.release_date = release_date;
     }
 
     public int getRating() {
