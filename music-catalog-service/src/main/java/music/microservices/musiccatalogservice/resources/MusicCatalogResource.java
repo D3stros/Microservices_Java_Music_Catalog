@@ -5,6 +5,8 @@ import music.microservices.musiccatalogservice.models.CatalogItem;
 import music.microservices.musiccatalogservice.models.Music;
 import music.microservices.musiccatalogservice.models.Rating;
 import music.microservices.musiccatalogservice.models.UserRating;
+import music.microservices.musiccatalogservice.services.MusicInfo;
+import music.microservices.musiccatalogservice.services.UserRatingInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,20 +24,18 @@ public class MusicCatalogResource {
 
     @Autowired
     private RestTemplate restTemplate;
+    @Autowired
+    MusicInfo musicInfo;
+    @Autowired
+    UserRatingInfo userRatingInfo;
 
     @RequestMapping("/{userId}")
-    @HystrixCommand(fallbackMethod = "getFallbackCatalog")
     public List<CatalogItem> getCatalog(@PathVariable("userId") String userId) {
 
-        UserRating ratings = restTemplate.getForObject("http://ratings-data-service/ratingsdata/users/" + userId, UserRating.class);
-
-        return ratings.getUserRating().stream().map(rating -> {
-            Music music = restTemplate.getForObject("http://music-info-service/music/" + rating.getMusicId(), Music.class);
-            return new CatalogItem(music.getName(), music.getRelease(), rating.getRating());
+        UserRating userRating = userRatingInfo.getUserRating(userId);
+        return userRating.getUserRating().stream().map(rating -> {
+            return musicInfo.getCatalogItem(rating);
         }).collect(Collectors.toList());
     }
 
-    public List<CatalogItem> getFallbackCatalog(@PathVariable("userId") String userId) {
-        return Arrays.asList(new CatalogItem("No movie", "", 0));
-    }
 }
