@@ -1,5 +1,6 @@
 package music.microservices.musiccatalogservice.resources;
 
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import music.microservices.musiccatalogservice.models.CatalogItem;
 import music.microservices.musiccatalogservice.models.Music;
 import music.microservices.musiccatalogservice.models.Rating;
@@ -23,6 +24,7 @@ public class MusicCatalogResource {
     private RestTemplate restTemplate;
 
     @RequestMapping("/{userId}")
+    @HystrixCommand(fallbackMethod = "getFallbackCatalog")
     public List<CatalogItem> getCatalog(@PathVariable("userId") String userId) {
 
         UserRating ratings = restTemplate.getForObject("http://ratings-data-service/ratingsdata/users/" + userId, UserRating.class);
@@ -31,5 +33,9 @@ public class MusicCatalogResource {
             Music music = restTemplate.getForObject("http://music-info-service/music/" + rating.getMusicId(), Music.class);
             return new CatalogItem(music.getName(), music.getRelease(), rating.getRating());
         }).collect(Collectors.toList());
+    }
+
+    public List<CatalogItem> getFallbackCatalog(@PathVariable("userId") String userId) {
+        return Arrays.asList(new CatalogItem("No movie", "", 0));
     }
 }
